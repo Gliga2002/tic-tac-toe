@@ -9,13 +9,15 @@
   <title>Document</title>
 </head>
 <body>
-  <main class="intro grid gap">
+
+
+  <main class="intro grid gap ">
     <header class="intro-header">
       <img src="./assets/logo.svg" alt="logo">
     </header>
     <section class="intro-section">
       <div class="intro-section--content">
-        <h3 class="intro-section--content__heading mg-btm--lg f-sz--md">Pick Player 1's Sign</h3>
+        <h3 class="intro-section--content__heading mg-btm--md f-sz--md">Pick Player 1's Sign</h3>
         <div class="intro-section--content__choice">
           <div class=" choice choice--x flex center"><i class="fa-solid fa-x fa-4x"></i></div>
           <div class="choiced choice choice--o flex center"><i class="fa-solid fa-o fa-4x"></i></div>
@@ -24,8 +26,66 @@
       </div>
     </section>
     <div class="intro-section--button">
-      <button class="btn intro-button">Start game</button>
+      <button class="btn btn--intro">Start game</button>
     </div>
   </main>
+
+  <main class="main hidden">
+    <header class="main-header flex space-evenly mg-btm--el">
+      <img src="./assets/logo.svg" alt="logo" />
+      <div class="main-show-turn flex gap--sm center--vert">
+        <img class="img-x" src="./assets/icon-x-gray.svg" alt="x">
+        <p class="f-sz--md uppercase bold letter-space">Turn</p>
+      </div>
+      <div class="main-restart">
+        <img src="./assets/icon-restart.svg" alt="restart" />
+      </div>
+    </header>
+
+    <section class="main-content grid gap--md mg-btm--lg">
+      <div class="box unclicked 1"></div>
+      <div class="box unclicked 2"></div>
+      <div class="box unclicked 3"></div>
+      <div class="box unclicked 4"></div>
+      <div class="box unclicked 5"></div>
+      <div class="box unclicked 6"></div>
+      <div class="box unclicked 7"></div>
+      <div class="box unclicked 8"></div>
+      <div class="box unclicked 9"></div>
+    </section>
+
+    <section class="main-result-display flex gap--md center">
+      <div class="player-1-score">
+        <p class="player-1-score__text mg-btm--em">Player x</p>
+        <p class="player-1-score__result">0</p>
+      </div>
+      <div class="ties">
+        <p class="ties__text mg-btm--em">Ties</p>
+        <p class="ties__result">0</p>
+      </div>
+      <div class="player-2-score">
+        <p class="player-2-score__text mg-btm--em">Player o</p>
+        <p class="player-2-score__result">0</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- The Modal -->
+<div id="myModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <!-- ovo p dodaj dinamicki -->
+    <p class="modal-content__text">Some text in the Modal..</p>
+    <div class="modal-content__btns flex gap--md center">
+      <button class="btn btn--quit">Quit</button>
+      <button class="btn btn--next-round">Next Round</button>
+    </div>
+  </div>
+
+</div>
+
+
+
 </body>
 </html>

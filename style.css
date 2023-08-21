@@ -20,6 +20,7 @@ html {
   --gray: #a9bec8c9;
   --blackish: #1A2B33;
   --blackish-secondary: #1E3640;
+  --blackish-tertiary:#39454a;
   --white: #ffffff;
 }
 
@@ -27,9 +28,9 @@ body {
   font-family: 'Outfit', sans-serif;
   line-height: 1;
   font-weight: 400;
-  color: var(--grayish);
-  height: 100vh;
   background-color: var(--blackish);
+  color: var(--blackish);
+  height: 100vh;
   padding:5rem 1rem;
 }
 
@@ -39,12 +40,15 @@ main {
 }
 
 .btn {
-  font-size: 1.5rem;
+  padding:2rem;
   cursor: pointer;
-  font-weight: bold;
   border-radius: 1rem;
   border:none;
   box-shadow: inset 0 -3px 2px rgba(0, 0, 0, .3);
+  text-transform: uppercase;
+  font-weight: bold;
+  letter-spacing: 1px;
+  font-size:1.4rem;
 }
 
 
@@ -58,12 +62,29 @@ main {
   align-items: center;
 }
 
+.center--vert {
+  align-items: center;
+}
+
 .gap {
   gap:30px;
 }
 
+.gap--sm {
+  gap:1rem;
+}
+
+.gap--md {
+  gap:2rem;
+}
+
 .flex {
   display:flex
+}
+
+.space-evenly {
+  align-items: center;
+  justify-content: space-between;
 }
 
 .center {
@@ -78,13 +99,36 @@ main {
 .f-sz--sm {
   font-size:1.4rem;
 }
+.mg-btm--em {
+  margin-bottom: 0.5rem !important;
+}
+
+.mg-btm--sm {
+  margin-bottom: 1rem !important;
+}
+
+.mg-btm--md {
+  margin-bottom: 3rem !important;
+}
 
 .mg-btm--lg {
-  margin-bottom: 3rem;
+  margin-bottom: 5rem !important;
+}
+
+.mg-btm--el {
+  margin-bottom:8rem !important;
 }
 
 .uppercase {
   text-transform: uppercase;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.letter-space {
+  letter-spacing: 1px;
 }
 
 
@@ -108,6 +152,7 @@ main {
 
 .intro-section {
   padding:2rem;
+  color:var(--grayish);
 }
 
 .intro-section--content {
@@ -168,17 +213,160 @@ main {
   position:relative;
 }
 
-.intro-button {
+.btn--intro{
   position:absolute;
   left: 50%;
   top:20%;
   transform: translate(-50%, -50%);
   width:50%;
-  letter-spacing: 1px;
-  text-transform: uppercase;
   background-color: var(--yellowish);
-  padding:2rem;
+  
 }
+
+.hidden {
+  display:none
+}
+
+
+/* MAIN LOGIC */
+.main {
+  width:60%;
+}
+
+.main-show-turn {
+  padding:1.5rem 2.5rem;
+  background-color: var(--blackish-secondary);
+  color:var(--grayish);
+  border-radius: 1rem;
+  box-shadow: 0 10px 10px rgba(0, 0, 0, .3);
+}
+
+.main-show-turn img {
+  height:20px;
+
+}
+
+
+
+.main-restart {
+  padding:1.6rem;
+  background-color: var(--grayish);
+  border-radius: 1rem;
+}
+
+.main-content {
+  height:60%;
+  width:40%;
+  margin:0 auto;
+  background-color: var(--blackish);
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.box {
+  height:100%;
+  width: 100%;
+  box-shadow: 0 10px 10px rgba(0, 0, 0, .3);
+  background-color: var(--blackish-secondary);
+  border-radius: 10px;
+  border:2px solid var(--blackish-tertiary);
+
+}
+
+.player-1-score,
+.ties,
+.player-2-score {
+  padding:1rem 3rem;
+  color:var(--blackish);
+  font-size:2rem;
+  font-weight: 300;
+  border-radius: 1rem;
+  border:none;
+  box-shadow: inset 0 -3px 2px rgba(0, 0, 0, .3);
+  text-transform: uppercase
+}
+
+.player-1-score {
+  background-color: var(--dark-cyan);
+}
+
+.ties {
+  background-color: var(--grayish);
+}
+
+.player-2-score {
+  background-color: var(--yellowish);
+}
+
+.player-1-score__result,
+.ties__result,
+.player-2-score__result {
+  text-align: center;
+  font-weight: bold;
+  
+}
+
+
+
+/***********************************************/
+/* JS style */
+
+
+/* OVO CES DA RADIS U JS OVDE JE POKAZNO */
+.unclicked:hover {
+  background-image: url("./assets/icon-o-outline.svg");
+  background-size: 60%;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* MODAL */
+
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-content {
+  background-color: var(--blackish-secondary);
+  margin: 17% auto; /* 17% from the top and centered */
+  /* height:30%; */
+  padding: 4rem 0;
+  width: 100%; /* Could be more or less, depending on screen size */
+}
+
+/* ovo ces u js da dodas */
+.modal-content__text {
+  color: var(--grayish);
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 3rem;
+  margin-bottom: 3rem;
+}
+
+.btn--quit,
+.btn--next-round {
+  padding:2rem 4rem;
+}
+
+.btn--quit {
+  background-color: var(--grayish);
+}
+
+.btn--next-round {
+  background-color: var(--yellowish);
+}
+
+
+
 
 
 
