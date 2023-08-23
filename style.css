@@ -327,7 +327,9 @@ main {
 
 /* OVO CES DA RADIS U JS OVDE JE POKAZNO */
 .hovered,
-.clicked {
+.clicked,
+.o-winner,
+.x-winner {
   background-size: 60%;
   background-repeat: no-repeat;
   background-position: center;
@@ -348,6 +350,18 @@ main {
 .x-clicked {
   background-image: url("./assets/icon-x.svg");
 }
+
+.x-winner {
+  background-color: var(--dark-cyan);
+  background-image: url('./assets/icon-x-transparent.svg') !important;
+}
+
+.o-winner {
+  background-color: var(--yellowish);
+  background-image: url("./assets/icon-o-dark.svg") !important;
+}
+
+
 
 /* MODAL */
 
@@ -380,6 +394,14 @@ main {
   text-transform: uppercase;
   font-size: 3rem;
   margin-bottom: 3rem;
+}
+
+.modal-content__congr {
+  color:var(--gray);
+  text-align: center;
+  text-transform: uppercase;
+  font-size:1.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .btn--quit,

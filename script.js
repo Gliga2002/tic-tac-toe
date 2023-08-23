@@ -1,5 +1,5 @@
-// Get the modal
-const modal = document.getElementById("myModal");
+  // Get the modal
+  const modal = document.getElementById("myModal");
 
 const introSection = document.querySelector('.intro');
 const mainSection = document.querySelector('.main');
@@ -79,12 +79,6 @@ function startGame() {
   mainSection.classList.remove('hidden');
 }
 
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-  if (event.target == modal) {
-    modal.style.display = "none";
-  }
-}
 
 
 
@@ -132,6 +126,7 @@ function Gameboard() {
 function GameController(playerOneName = 'player1', playerTwoName = 'player2') {
 
   const board = Gameboard();
+  const {setWinnerBox, changeFinishGameUI} = screenControler();
 
   const players = [
     {
@@ -192,28 +187,46 @@ function GameController(playerOneName = 'player1', playerTwoName = 'player2') {
   
   }
 
-  function checkWinner(playerToken, board) {
+  function checkWinner(player, board) {
     
     // Check row
     for(let row = 0; row < 3;row++) {
-      if(board[row][0] === playerToken &&  board[row][1]  === playerToken &&  board[row][2] === playerToken) {
-        console.log(`Player ${playerToken} win!`);
+      if(board[row][0] === player.token &&  board[row][1]  === player.token &&  board[row][2] === player.token) {
+
+        setWinnerBox(row, null, null, player.tokenName);
+        changeFinishGameUI(player);
+        
       }
     }
 
 
     // Check column
     for(let column = 0; column< 3;column++) {
-      if(board[0][column] === playerToken && board[1][column] === playerToken && board[2][column] === playerToken) {
-        console.log(`Player ${playerToken} win!`);
+      if(board[0][column] === player.token && board[1][column] === player.token && board[2][column] === player.token) {
+
+        setWinnerBox(null, column, null, player.tokenName);
+        changeFinishGameUI(player);
       }
     }
 
 
-    // Check diagonal
-    if(board[0][0] === playerToken && board[1][1] === playerToken && board[2][2] === playerToken) console.log(`Player ${playerToken} win!`);
+    // Check diagonal right
+    if(board[0][0] === player.token && board[1][1] === player.token && board[2][2] === player.token) {
 
-    if(board[0][2] === playerToken && board[1][1] === playerToken && board[2][0] === playerToken) console.log(`Player ${playerToken} win!`);
+      setWinnerBox(null, null, 'right', player.tokenName);
+      changeFinishGameUI(player);
+    
+    }
+    
+
+
+    // Check diagonal left
+    if(board[0][2] === player.token && board[1][1] === player.token && board[2][0] === player.token) {
+
+      setWinnerBox(null, null, 'left', player.tokenName);
+      changeFinishGameUI(player);
+    }
+
 
     return;
 
@@ -226,23 +239,171 @@ function GameController(playerOneName = 'player1', playerTwoName = 'player2') {
     if(!board.placeToken(row, column, getActivePlayer())) return
 
 
-    checkWinner(players[0].token, board.getBoard())
-    checkWinner(players[1].token, board.getBoard())
+    checkWinner(players[0], board.getBoard())
+    checkWinner(players[1], board.getBoard())
 
     renderUI(clickedCell);
 
     printNewRound();
     switchActivePlayer();
-    console.log(minLenght);
+   
     minLenght--;
-    if(minLenght === 0) console.log("It's tie")
+    console.log(minLenght)
+    if(minLenght === 0) changeFinishGameUI();
 
   }
 
 
+  return {setPlayersTokenName, getActivePlayer, playRound};
+}
 
 
 
 
-  return {setPlayersTokenName, getActivePlayer, playRound,};
+
+
+
+
+
+
+
+
+
+
+function screenControler() {
+
+  const modalContent = document.querySelector('.modal-content');
+
+  const player1Score = document.querySelector('.player-1-score__result');
+  const ties = document.querySelector('.ties__result');
+  const player2Score = document.querySelector('.player-2-score__result');
+
+
+  // refacro code
+  function setWinnerBox(row, column, diagonal, tokenName) {
+    console.log({row, column, diagonal, tokenName})
+    console.log(typeof column)
+    if(tokenName === 'x') {
+      if(row >=0) {
+        switch(row) {
+          case 0: document.querySelectorAll('.box[data-row="0"]').forEach((box) => box.classList.add('x-winner'));
+            break;
+          case 1: document.querySelectorAll('.box[data-row="1"]').forEach((box) => box.classList.add('x-winner'));
+            break;
+          case 2: document.querySelectorAll('.box[data-row="2"]').forEach((box) => box.classList.add('x-winner'));
+    
+        }
+      }
+
+      if(column >=0) {
+        switch(column) {
+          case 0: 
+            console.log('ovde')
+            console.log(document.querySelectorAll('.box[data-column="0"]'))
+            document.querySelectorAll('.box[data-column="0"]').forEach((box) => box.classList.add('x-winner'));
+            break;
+          case 1: document.querySelectorAll('.box[data-column="1"]').forEach((box) => box.classList.add('x-winner'));
+            break;
+          case 2: document.querySelectorAll('.box[data-column="2"]').forEach((box) => box.classList.add('x-winner'));
+    
+        }
+      }
+
+
+      if(diagonal === 'right') {
+        document.querySelectorAll('.box[data-column="0"][data-row="0"]').forEach((box) => box.classList.add('x-winner'));
+        document.querySelectorAll('.box[data-column="1"][data-row="1"]').forEach((box) => box.classList.add('x-winner'));
+        document.querySelectorAll('.box[data-column="2"][data-row="2"]').forEach((box) => box.classList.add('x-winner'));
+      }
+
+      if(diagonal === 'left') {
+        document.querySelectorAll('.box[data-column="2"][data-row="0"]').forEach((box) => box.classList.add('x-winner'));
+        document.querySelectorAll('.box[data-column="1"][data-row="1"]').forEach((box) => box.classList.add('x-winner'));
+        document.querySelectorAll('.box[data-column="0"][data-row="2"]').forEach((box) => box.classList.add('x-winner'));
+      }
+     
+    } else if (tokenName === 'o') {
+      if(row >= 0) {
+        switch(row) {
+          case 0: document.querySelectorAll('.box[data-row="0"]').forEach((box) => box.classList.add('o-winner'));
+            break;
+          case 1: document.querySelectorAll('.box[data-row="1"]').forEach((box) => box.classList.add('o-winner'));
+            break;
+          case 2: document.querySelectorAll('.box[data-row="2"]').forEach((box) => box.classList.add('o-winner'));
+    
+        }
+      }
+
+      if(column >=0) {
+        switch(column) {
+          case 0: document.querySelectorAll('.box[data-column="0"]').forEach((box) => box.classList.add('o-winner'));
+            break;
+          case 1: document.querySelectorAll('.box[data-column="1"]').forEach((box) => box.classList.add('o-winner'));
+            break;
+          case 2: document.querySelectorAll('.box[data-column="2"]').forEach((box) => box.classList.add('o-winner'));
+    
+        }
+      }
+
+
+      if(diagonal === 'right') {
+        document.querySelectorAll('.box[data-column="0"][data-row="0"]').forEach((box) => box.classList.add('o-winner'));
+        document.querySelectorAll('.box[data-column="1"][data-row="1"]').forEach((box) => box.classList.add('o-winner'));
+        document.querySelectorAll('.box[data-column="2"][data-row="2"]').forEach((box) => box.classList.add('o-winner'));
+      }
+
+      if(diagonal === 'left') {
+        document.querySelectorAll('.box[data-column="2"][data-row="0"]').forEach((box) => box.classList.add('o-winner'));
+        document.querySelectorAll('.box[data-column="1"][data-row="1"]').forEach((box) => box.classList.add('o-winner'));
+        document.querySelectorAll('.box[data-column="0"][data-row="2"]').forEach((box) => box.classList.add('o-winner'));
+      }
+    }
+
+  }
+
+  function changeFinishGameUI(score = 'tied') {
+
+    if(score.name ==='player1') {
+      player1Score.textContent = Number(player1Score.textContent) + 1;
+      displayModalContent(score)
+
+    }
+
+
+    if(score === 'tied') {
+      console.log('sdadasdasdas')
+      ties.textContent = Number(ties.textContent) + 1;
+      displayModalContent();
+      
+    }
+
+    if(score.name === 'player2') {
+      player2Score.textContent = Number(player2Score.textContent) + 1;
+      displayModalContent(score);
+    }
+  }
+
+  // winnerPlayer je objekat
+  function displayModalContent(winnerPlayer) {
+    modal.style.display = 'block';
+    const div = document.createElement('div');
+    div.innerHTML = `${winnerPlayer ? '<p class="modal-content__congr">Congratulation!</p>' : ''}
+                      <h2 class="flex center gap--sm">
+                      ${winnerPlayer ? 
+                        `<section class="mg-btm--md">
+                          <img
+                            src=${winnerPlayer.tokenName === 'x' ?  "./assets/icon-x.svg" : "./assets/icon-o.svg"}
+                            alt=${winnerPlayer.tokenName === 'x' ? 'x' :'o'}>
+                         </section>` : ""}
+                        <section class="modal-content__text">${winnerPlayer ? "takes the round" : "It's tie"} </section
+                      </h2> 
+                   `
+    modalContent.prepend(div);
+  }
+
+  
+
+  
+
+  return {setWinnerBox, changeFinishGameUI}
 }
