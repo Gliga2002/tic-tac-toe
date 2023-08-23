@@ -38,9 +38,14 @@ mainContent.addEventListener('click', function(e) {
   let clickedCell = e.target.closest('.box');
   if(!clickedCell) return;
 
-  renderUI(clickedCell);
+  const clickedCellRow = clickedCell.dataset.row;
+  const clickedCellColumn = clickedCell.dataset.column;
 
-  gameControl.playRound(clickedCell.dataset.row, clickedCell.dataset.column);
+  gameControl.playRound(clickedCellRow, clickedCellColumn, clickedCell);
+
+
+
+  
 
   
 
@@ -56,7 +61,6 @@ mainContent.addEventListener('mouseover', function(e) {
 })
 
 mainContent.addEventListener('mouseout', function(e) {
-  console.log('dsadsad')
   const hoveredCell = e.target.closest('.hovered')
   if(!hoveredCell) return
   hoveredCell.classList.remove('hovered','x-hovered','o-hovered');
@@ -82,24 +86,7 @@ window.onclick = function(event) {
   }
 }
 
-function renderUI(clickedCell) {
-  clickedCell.classList.remove('unclicked','x-hovered','o-hovered');
-  const activePlayer = gameControl.getActivePlayer();
 
-  const showTurnImgEl = mainShowTurnEl.firstElementChild
-  
-  if(activePlayer.tokenName === 'x') {
-    setImgTurn(showTurnImgEl, './assets/icon-o-gray.svg');
-    clickedCell.classList.remove('hovered','x-hovered');
-    clickedCell.classList.add('clicked', 'x-clicked')
-  }
-  if(activePlayer.tokenName === 'o') {
-    setImgTurn(showTurnImgEl, './assets/icon-x-gray.svg');
-    clickedCell.classList.remove('hovered','o-hovered')
-    clickedCell.classList.add('clicked', 'o-clicked')
-  }
-
-}
 
 function setImgTurn(img, url) {
   img.setAttribute('src', url)
@@ -127,13 +114,13 @@ function Gameboard() {
   }
 
   const getBoard = () => {
-    console.log(board);
+    // console.log(board);
     return board;
   }
 
   const placeToken = (row,column,player) => {
     if(board[row][column]) return
-
+    console.log(board);
     board[row][column] = player.token;
     return true;
   }
@@ -184,10 +171,31 @@ function GameController(playerOneName = 'player1', playerTwoName = 'player2') {
     console.log(`${getActivePlayer().name}'s turn.`);
   };
 
-  const playRound = (row, column) => {
+  function renderUI(clickedCell) {
+    clickedCell.classList.remove('unclicked','x-hovered','o-hovered');
+    const activePlayer = gameControl.getActivePlayer();
+  
+    const showTurnImgEl = mainShowTurnEl.firstElementChild
+    
+    if(activePlayer.tokenName === 'x') {
+      setImgTurn(showTurnImgEl, './assets/icon-o-gray.svg');
+      clickedCell.classList.remove('hovered','x-hovered');
+      clickedCell.classList.add('clicked', 'x-clicked')
+    }
+    if(activePlayer.tokenName === 'o') {
+      setImgTurn(showTurnImgEl, './assets/icon-x-gray.svg');
+      clickedCell.classList.remove('hovered','o-hovered')
+      clickedCell.classList.add('clicked', 'o-clicked')
+    }
+  
+  }
+
+  const playRound = (row, column, clickedCell) => {
     if(!board.placeToken(row, column, getActivePlayer())) return
 
-    
+ 
+
+    renderUI(clickedCell)
     printNewRound();
     switchActivePlayer();
   }
@@ -197,5 +205,5 @@ function GameController(playerOneName = 'player1', playerTwoName = 'player2') {
 
 
 
-  return {setPlayersTokenName, getActivePlayer, playRound};
+  return {setPlayersTokenName, getActivePlayer, playRound,};
 }
