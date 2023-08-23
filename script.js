@@ -11,6 +11,8 @@ const selectOEl = document.querySelector('.choice--o');
 const startGameEl = document.querySelector('.btn--intro');
 
 const gameControl = GameController();
+const board = Gameboard();
+
 
 selectXEl.addEventListener('click', function(e) {
   // Igrac 1 je izabrao x
@@ -107,10 +109,22 @@ function Gameboard() {
     }
   }
 
+  const restartBoard = ()=> {
+    for (let i = 0; i < rows; i++) {
+      board[i] = [];
+      for (let j = 0; j < columns; j++) {
+        board[i].push(0);
+      }
+    }
+    console.log(board);
+  }
+
   const getBoard = () => {
     // console.log(board);
     return board;
   }
+
+  
 
   const placeToken = (row,column,player) => {
     if(board[row][column]) return
@@ -119,13 +133,16 @@ function Gameboard() {
     return true;
   }
   
-  return {getBoard, placeToken};
+  return {getBoard, placeToken, restartBoard};
 }
+
+
+
 
 
 function GameController(playerOneName = 'player1', playerTwoName = 'player2') {
 
-  const board = Gameboard();
+  
   const {setWinnerBox, changeFinishGameUI} = screenControler();
 
   const players = [
@@ -151,6 +168,7 @@ function GameController(playerOneName = 'player1', playerTwoName = 'player2') {
     players[1].tokenName = players[0].tokenName === "x" ? "o" : "x";
 
     activePlayer = players[0];
+    document.querySelector('.img-x').setAttribute('src', `./assets/icon-${players[0].tokenName}.svg`)
 
     console.log(players);
   }
@@ -171,10 +189,12 @@ function GameController(playerOneName = 'player1', playerTwoName = 'player2') {
   function renderUI(clickedCell) {
     clickedCell.classList.remove('unclicked','x-hovered','o-hovered');
     const activePlayer = gameControl.getActivePlayer();
+    console.log(activePlayer);
   
     const showTurnImgEl = mainShowTurnEl.firstElementChild
     
     if(activePlayer.tokenName === 'x') {
+      // ovo mi je sus
       setImgTurn(showTurnImgEl, './assets/icon-o-gray.svg');
       clickedCell.classList.remove('hovered','x-hovered');
       clickedCell.classList.add('clicked', 'x-clicked')
@@ -247,14 +267,21 @@ function GameController(playerOneName = 'player1', playerTwoName = 'player2') {
     printNewRound();
     switchActivePlayer();
    
+    // ovo gledaj
     minLenght--;
     console.log(minLenght)
     if(minLenght === 0) changeFinishGameUI();
 
   }
 
+  const resetGame = function() {
+    board.restartBoard();
 
-  return {setPlayersTokenName, getActivePlayer, playRound};
+    minLenght = 9;
+  }
+
+
+  return {setPlayersTokenName, getActivePlayer, playRound, resetGame};
 }
 
 
@@ -271,12 +298,19 @@ function GameController(playerOneName = 'player1', playerTwoName = 'player2') {
 
 
 function screenControler() {
+  
 
   const modalContent = document.querySelector('.modal-content');
+  const btnQuit = document.querySelector('.btn--quit');
+  const btnNextRount = document.querySelector('.btn--next-round');
+  const restartEl = document.querySelector('.main-restart');
+
+  const boxAll = document.querySelectorAll('.box');
 
   const player1Score = document.querySelector('.player-1-score__result');
   const ties = document.querySelector('.ties__result');
   const player2Score = document.querySelector('.player-2-score__result');
+
 
 
   // refacro code
@@ -386,9 +420,8 @@ function screenControler() {
   // winnerPlayer je objekat
   function displayModalContent(winnerPlayer) {
     modal.style.display = 'block';
-    const div = document.createElement('div');
-    div.innerHTML = `${winnerPlayer ? '<p class="modal-content__congr">Congratulation!</p>' : ''}
-                      <h2 class="flex center gap--sm">
+    modalContent.firstElementChild.innerHTML = `${winnerPlayer ? '<p class="modal-content__congr">Congratulation!</p>' : ''}
+                     <h2 class="flex center gap--sm">
                       ${winnerPlayer ? 
                         `<section class="mg-btm--md">
                           <img
@@ -398,8 +431,57 @@ function screenControler() {
                         <section class="modal-content__text">${winnerPlayer ? "takes the round" : "It's tie"} </section
                       </h2> 
                    `
-    modalContent.prepend(div);
+
   }
+
+  function removeBoxContent() {
+    boxAll.forEach((box) => {
+      box.classList.remove('clicked','x-winner','o-winner','x-clicked', 'o-clicked');
+      box.classList.add('unclicked');
+    })
+  }
+
+
+
+  btnQuit.addEventListener('click' , (e) => {
+    modal.firstElementChild.firstElementChild.innerHTML = ''
+    modal.style.display= "none";
+    removeBoxContent();
+    gameControl.resetGame();
+    player1Score.textContent = 0;
+    ties.textContent = 0;
+    player2Score.textContent = 0;
+
+    introSection.classList.remove('hidden')
+    mainSection.classList.add('hidden');
+    
+    
+
+  })
+
+  btnNextRount.addEventListener('click' , (e) => {
+    modal.firstElementChild.firstElementChild.innerHTML = ""
+    modal.style.display= "none";
+    removeBoxContent();
+    gameControl.resetGame();
+    
+
+
+  })
+
+  restartEl.addEventListener('click',(e) => {
+    modal.firstElementChild.firstElementChild.innerHTML = ""
+    // document.querySelector('.modal-content__div').remove();
+    // modal.style.display= "none";
+    removeBoxContent();
+    gameControl.resetGame();
+   
+
+
+ 
+  })
+
+
 
   
 

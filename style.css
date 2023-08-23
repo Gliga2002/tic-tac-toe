@@ -389,7 +389,7 @@ main {
 
 /* ovo ces u js da dodas */
 .modal-content__text {
-  color: var(--grayish);
+  color: var(--dark-cyan);
   text-align: center;
   text-transform: uppercase;
   font-size: 3rem;
