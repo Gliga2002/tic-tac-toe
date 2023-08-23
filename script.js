@@ -147,6 +147,8 @@ function GameController(playerOneName = 'player1', playerTwoName = 'player2') {
     }
   ]
 
+  let minLenght = 9;
+
   let activePlayer = players[0];
 
   const setPlayersTokenName = (tokenName) => {
@@ -190,14 +192,51 @@ function GameController(playerOneName = 'player1', playerTwoName = 'player2') {
   
   }
 
+  function checkWinner(playerToken, board) {
+    
+    // Check row
+    for(let row = 0; row < 3;row++) {
+      if(board[row][0] === playerToken &&  board[row][1]  === playerToken &&  board[row][2] === playerToken) {
+        console.log(`Player ${playerToken} win!`);
+      }
+    }
+
+
+    // Check column
+    for(let column = 0; column< 3;column++) {
+      if(board[0][column] === playerToken && board[1][column] === playerToken && board[2][column] === playerToken) {
+        console.log(`Player ${playerToken} win!`);
+      }
+    }
+
+
+    // Check diagonal
+    if(board[0][0] === playerToken && board[1][1] === playerToken && board[2][2] === playerToken) console.log(`Player ${playerToken} win!`);
+
+    if(board[0][2] === playerToken && board[1][1] === playerToken && board[2][0] === playerToken) console.log(`Player ${playerToken} win!`);
+
+    return;
+
+
+  }
+
   const playRound = (row, column, clickedCell) => {
+    
+
     if(!board.placeToken(row, column, getActivePlayer())) return
 
- 
 
-    renderUI(clickedCell)
+    checkWinner(players[0].token, board.getBoard())
+    checkWinner(players[1].token, board.getBoard())
+
+    renderUI(clickedCell);
+
     printNewRound();
     switchActivePlayer();
+    console.log(minLenght);
+    minLenght--;
+    if(minLenght === 0) console.log("It's tie")
+
   }
 
 
