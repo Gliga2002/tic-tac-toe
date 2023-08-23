@@ -326,11 +326,27 @@ main {
 
 
 /* OVO CES DA RADIS U JS OVDE JE POKAZNO */
-.unclicked:hover {
-  background-image: url("./assets/icon-o-outline.svg");
+.hovered,
+.clicked {
   background-size: 60%;
   background-repeat: no-repeat;
   background-position: center;
+}
+
+.o-hovered {
+  background-image: url("./assets/icon-o-outline.svg");
+}
+
+.x-hovered {
+  background-image: url("./assets/icon-x-outline.svg");
+}
+
+.o-clicked {
+  background-image: url("./assets/icon-o.svg");
+}
+
+.x-clicked {
+  background-image: url("./assets/icon-x.svg");
 }
 
 /* MODAL */
