@@ -1,103 +1,9 @@
-  // Get the modal
-  const modal = document.getElementById("myModal");
-
-const introSection = document.querySelector('.intro');
-const mainSection = document.querySelector('.main');
-const mainContent = document.querySelector('.main-content');
-const mainShowTurnEl = document.querySelector('.main-show-turn')
-
-const selectXEl = document.querySelector('.choice--x');
-const selectOEl = document.querySelector('.choice--o');
-const startGameEl = document.querySelector('.btn--intro');
-
 const gameControl = GameController();
 const board = Gameboard();
-
-
-selectXEl.addEventListener('click', function(e) {
-  // Igrac 1 je izabrao x
-  toggleSignSelect.call(this, selectOEl);
-  
-  gameControl.setPlayersTokenName('x');
-  
-
-  
-})
-
-selectOEl.addEventListener('click', function(e)  {
-  // Igrac 1 je izabrao o
-  toggleSignSelect.call(this, selectXEl);
-
-  gameControl.setPlayersTokenName('o');
-  
-})
-
-startGameEl.addEventListener('click',(e) => {
-  startGame();
-})
-
-mainContent.addEventListener('click', function(e) {
-  let clickedCell = e.target.closest('.box');
-  if(!clickedCell) return;
-
-  const clickedCellRow = clickedCell.dataset.row;
-  const clickedCellColumn = clickedCell.dataset.column;
-
-  gameControl.playRound(clickedCellRow, clickedCellColumn, clickedCell);
-
-
-
-  
-
-  
-
-})
-
-mainContent.addEventListener('mouseover', function(e) {
-  const unclikedCell = e.target.closest('.unclicked')
-  if(!unclikedCell) return
-  unclikedCell.classList.add('hovered');
-  const activePlayer = gameControl.getActivePlayer().tokenName;
-  if(activePlayer === 'x') unclikedCell.classList.add('x-hovered');
-  if(activePlayer === 'o') unclikedCell.classList.add('o-hovered');
-})
-
-mainContent.addEventListener('mouseout', function(e) {
-  const hoveredCell = e.target.closest('.hovered')
-  if(!hoveredCell) return
-  hoveredCell.classList.remove('hovered','x-hovered','o-hovered');
-  // const activePlayer = gameControl.getActivePlayer().tokenName;
-  // if(activePlayer === 'x') unclikedCell.classList.add('x-hovered');
-  // if(activePlayer === 'o') unclikedCell.classList.add('o-hovered');
-})
-
-function toggleSignSelect(hideEl) {
-  this.classList.add('choiced');
-  hideEl.classList.remove('choiced');
-}
-
-function startGame() {
-  introSection.classList.add('hidden');
-  mainSection.classList.remove('hidden');
-}
-
-
-
-
-function setImgTurn(img, url) {
-  img.setAttribute('src', url)
-}
-
-
- 
-
-
-
 
 // Game logic
 
 function Gameboard() {
-  console.log(`GAME BOARD EXECTUION COUNT`);
   const rows = 3;
   const columns = 3;
   const board = [];
@@ -116,19 +22,12 @@ function Gameboard() {
         board[i].push(0);
       }
     }
-    console.log(board);
   }
 
-  const getBoard = () => {
-    // console.log(board);
-    return board;
-  }
-
-  
+  const getBoard = () => board;
 
   const placeToken = (row,column,player) => {
     if(board[row][column]) return
-    console.log(board);
     board[row][column] = player.token;
     return true;
   }
@@ -139,11 +38,8 @@ function Gameboard() {
 
 
 
-
 function GameController(playerOneName = 'player1', playerTwoName = 'player2') {
-
-  
-  const {setWinnerBox, changeFinishGameUI} = screenControler();
+  const {setWinnerBox, changeFinishGameUI, updateScreen} = screenControler();
 
   const players = [
     {
@@ -170,45 +66,20 @@ function GameController(playerOneName = 'player1', playerTwoName = 'player2') {
     activePlayer = players[0];
     document.querySelector('.img-x').setAttribute('src', `./assets/icon-${players[0].tokenName}.svg`)
 
-    console.log(players);
   }
 
   const switchActivePlayer = () => {
     activePlayer = activePlayer === players[0] ? players[1] : players[0]
   }
-
   // ovo cu da export
   const getActivePlayer = () =>  activePlayer;
   
-
   const printNewRound = () => {
     board.getBoard();
     console.log(`${getActivePlayer().name}'s turn.`);
   };
 
-  function renderUI(clickedCell) {
-    clickedCell.classList.remove('unclicked','x-hovered','o-hovered');
-    const activePlayer = gameControl.getActivePlayer();
-    console.log(activePlayer);
-  
-    const showTurnImgEl = mainShowTurnEl.firstElementChild
-    
-    if(activePlayer.tokenName === 'x') {
-      // ovo mi je sus
-      setImgTurn(showTurnImgEl, './assets/icon-o-gray.svg');
-      clickedCell.classList.remove('hovered','x-hovered');
-      clickedCell.classList.add('clicked', 'x-clicked')
-    }
-    if(activePlayer.tokenName === 'o') {
-      setImgTurn(showTurnImgEl, './assets/icon-x-gray.svg');
-      clickedCell.classList.remove('hovered','o-hovered')
-      clickedCell.classList.add('clicked', 'o-clicked')
-    }
-  
-  }
-
   function checkWinner(player, board) {
-    
     // Check row
     for(let row = 0; row < 3;row++) {
       if(board[row][0] === player.token &&  board[row][1]  === player.token &&  board[row][2] === player.token) {
@@ -218,8 +89,6 @@ function GameController(playerOneName = 'player1', playerTwoName = 'player2') {
         
       }
     }
-
-
     // Check column
     for(let column = 0; column< 3;column++) {
       if(board[0][column] === player.token && board[1][column] === player.token && board[2][column] === player.token) {
@@ -228,8 +97,6 @@ function GameController(playerOneName = 'player1', playerTwoName = 'player2') {
         changeFinishGameUI(player);
       }
     }
-
-
     // Check diagonal right
     if(board[0][0] === player.token && board[1][1] === player.token && board[2][2] === player.token) {
 
@@ -237,9 +104,6 @@ function GameController(playerOneName = 'player1', playerTwoName = 'player2') {
       changeFinishGameUI(player);
     
     }
-    
-
-
     // Check diagonal left
     if(board[0][2] === player.token && board[1][1] === player.token && board[2][0] === player.token) {
 
@@ -247,36 +111,27 @@ function GameController(playerOneName = 'player1', playerTwoName = 'player2') {
       changeFinishGameUI(player);
     }
 
-
     return;
-
-
   }
 
   const playRound = (row, column, clickedCell) => {
-    
-
     if(!board.placeToken(row, column, getActivePlayer())) return
-
 
     checkWinner(players[0], board.getBoard())
     checkWinner(players[1], board.getBoard())
 
-    renderUI(clickedCell);
+    updateScreen(clickedCell);
 
     printNewRound();
     switchActivePlayer();
    
-    // ovo gledaj
     minLenght--;
-    console.log(minLenght)
-    if(minLenght === 0) changeFinishGameUI();
 
+    if(minLenght === 0) changeFinishGameUI();
   }
 
   const resetGame = function() {
     board.restartBoard();
-
     minLenght = 9;
   }
 
@@ -298,23 +153,156 @@ function GameController(playerOneName = 'player1', playerTwoName = 'player2') {
 
 
 function screenControler() {
-  
+  const introSection = document.querySelector('.intro');
+  const selectXEl = document.querySelector('.choice--x');
+  const selectOEl = document.querySelector('.choice--o');
+  const startGameEl = document.querySelector('.btn--intro');
 
+
+  const mainSection = document.querySelector('.main');
+  const mainContent = document.querySelector('.main-content');
+  const mainShowTurnEl = document.querySelector('.main-show-turn')
+  
+  const modal = document.getElementById("myModal");
   const modalContent = document.querySelector('.modal-content');
   const btnQuit = document.querySelector('.btn--quit');
   const btnNextRount = document.querySelector('.btn--next-round');
   const restartEl = document.querySelector('.main-restart');
 
-  const boxAll = document.querySelectorAll('.box');
-
   const player1Score = document.querySelector('.player-1-score__result');
   const ties = document.querySelector('.ties__result');
   const player2Score = document.querySelector('.player-2-score__result');
 
+  const boxAll = document.querySelectorAll('.box');
 
+  
+  mainContent.addEventListener('click', function(e) {
+    let clickedCell = e.target.closest('.box');
+    if(!clickedCell) return;
+  
+    const clickedCellRow = clickedCell.dataset.row;
+    const clickedCellColumn = clickedCell.dataset.column;
+  
+    gameControl.playRound(clickedCellRow, clickedCellColumn, clickedCell);
+  })
+  
+  mainContent.addEventListener('mouseover', function(e) {
+    const unclikedCell = e.target.closest('.unclicked')
+    if(!unclikedCell) return
+    // unclikedCell.classList.add('hovered');
+
+    const activePlayer = gameControl.getActivePlayer().tokenName;
+
+    if(activePlayer === 'x') addClasses(unclikedCell,'x-hovered','hovered');
+    if(activePlayer === 'o') addClasses(unclikedCell,'o-hovered','hovered');
+  })
+  
+  mainContent.addEventListener('mouseout', function(e) {
+    const hoveredCell = e.target.closest('.hovered')
+    if(!hoveredCell) return
+    removeClasses(hoveredCell,'hovered','x-hovered','o-hovered')
+    // hoveredCell.classList.remove('hovered','x-hovered','o-hovered');
+  })
+
+
+  selectXEl.addEventListener('click', function(e) {
+    // Igrac 1 je izabrao x
+    toggleSignSelect.call(this, selectOEl);
+    
+    gameControl.setPlayersTokenName('x');
+    
+  
+    
+  })
+  
+  selectOEl.addEventListener('click', function(e)  {
+    // Igrac 1 je izabrao o
+    toggleSignSelect.call(this, selectXEl);
+  
+    gameControl.setPlayersTokenName('o');
+    
+  })
+  
+  startGameEl.addEventListener('click',(e) => {
+    startGame();
+  })
+
+  
+  btnQuit.addEventListener('click' , (e) => {
+    modal.style.display= "none";
+    playAgain();
+    resetResultDisplay();
+    endGame();
+    
+    
+
+  })
+
+  btnNextRount.addEventListener('click' , (e) => {
+    modal.style.display= "none";
+    playAgain();
+
+  })
+
+  restartEl.addEventListener('click',(e) => {
+    playAgain();
+
+  })
+
+
+  const updateScreen = function (clickedCell) {
+    clickedCell.classList.remove('unclicked','x-hovered','o-hovered');
+    const activePlayer = gameControl.getActivePlayer();
+
+  
+    const showTurnImgEl = mainShowTurnEl.firstElementChild
+    
+    if(activePlayer.tokenName === 'x') {
+      // ovo mi je sus
+      setImgTurn(showTurnImgEl, './assets/icon-o-gray.svg');
+      // removeClasses(clickedCell, 'hovered','x-hovered')
+      addClasses(clickedCell,'clicked', 'x-clicked');
+      // clickedCell.classList.remove('hovered','x-hovered');
+      // clickedCell.classList.add('clicked', 'x-clicked')
+    }
+    if(activePlayer.tokenName === 'o') {
+      setImgTurn(showTurnImgEl, './assets/icon-x-gray.svg');
+      // removeClasses(clickedCell, 'hovered','o-hovered')
+      addClasses(clickedCell,'clicked', 'o-clicked');
+      // clickedCell.classList.remove('hovered','o-hovered')
+      // clickedCell.classList.add('clicked', 'o-clicked')
+    }
+  
+  }
+
+  
+
+
+  const changeFinishGameUI = function(score = 'tied') {
+    if(score.name ==='player1') {
+      // set display result
+      player1Score.textContent = Number(player1Score.textContent) + 1;
+      displayModalContent(score)
+
+    }
+
+
+    if(score === 'tied') {
+      // set display result
+      ties.textContent = Number(ties.textContent) + 1;
+      displayModalContent();
+      
+    }
+
+    if(score.name === 'player2') {
+      // set display result
+      player2Score.textContent = Number(player2Score.textContent) + 1;
+      displayModalContent(score);
+    }
+  }
 
   // refacro code
-  function setWinnerBox(row, column, diagonal, tokenName) {
+  const setWinnerBox = function (row, column, diagonal, tokenName) {
     console.log({row, column, diagonal, tokenName})
     console.log(typeof column)
     if(tokenName === 'x') {
@@ -395,33 +383,66 @@ function screenControler() {
 
   }
 
-  function changeFinishGameUI(score = 'tied') {
-
-    if(score.name ==='player1') {
-      player1Score.textContent = Number(player1Score.textContent) + 1;
-      displayModalContent(score)
-
-    }
-
-
-    if(score === 'tied') {
-      console.log('sdadasdasdas')
-      ties.textContent = Number(ties.textContent) + 1;
-      displayModalContent();
-      
-    }
-
-    if(score.name === 'player2') {
-      player2Score.textContent = Number(player2Score.textContent) + 1;
-      displayModalContent(score);
-    }
+  
+  function toggleSignSelect(hideEl) {
+    this.classList.add('choiced');
+    hideEl.classList.remove('choiced');
+  }
+  
+  function startGame() {
+    introSection.classList.add('hidden');
+    mainSection.classList.remove('hidden');
   }
 
+  function endGame() {
+    introSection.classList.remove('hidden')
+    mainSection.classList.add('hidden');
+}
+  function resetResultDisplay() {
+    player1Score.textContent = 0;
+    ties.textContent = 0;
+    player2Score.textContent = 0;
+  }
+
+  function playAgain() {
+    modal.firstElementChild.firstElementChild.innerHTML = ''
+    
+    removeBoxContent();
+    gameControl.resetGame();
+  }
+
+  function setImgTurn(img, url) {
+    img.setAttribute('src', url)
+  }
+
+  function removeClasses(el, ...args) {
+    console.log('PROBA REMOVE')
+    args.forEach((arg) => el.classList.remove(arg))
+  }
+
+  function addClasses(el, ...args) {
+    console.log('PROBA ADD')
+    args.forEach((arg) => el.classList.add(arg))
+  }
+
+  function removeBoxContent() {
+    boxAll.forEach((box) => {
+      removeClasses(box, 'clicked','x-winner','o-winner','x-clicked', 'o-clicked');
+      addClasses(box, 'unclicked');
+      // box.classList.remove('clicked','x-winner','o-winner','x-clicked', 'o-clicked');
+      // box.classList.add('unclicked');
+    })
+  }
+
+
+
+  
   // winnerPlayer je objekat
   function displayModalContent(winnerPlayer) {
     modal.style.display = 'block';
-    modalContent.firstElementChild.innerHTML = `${winnerPlayer ? '<p class="modal-content__congr">Congratulation!</p>' : ''}
-                     <h2 class="flex center gap--sm">
+    modalContent.firstElementChild.innerHTML = 
+    `${winnerPlayer ? '<p class="modal-content__congr">Congratulation!</p>' : ''}
+                       <h2 class="flex center gap--sm">
                       ${winnerPlayer ? 
                         `<section class="mg-btm--md">
                           <img
@@ -434,58 +455,17 @@ function screenControler() {
 
   }
 
-  function removeBoxContent() {
-    boxAll.forEach((box) => {
-      box.classList.remove('clicked','x-winner','o-winner','x-clicked', 'o-clicked');
-      box.classList.add('unclicked');
-    })
-  }
+  
 
 
-
-  btnQuit.addEventListener('click' , (e) => {
-    modal.firstElementChild.firstElementChild.innerHTML = ''
-    modal.style.display= "none";
-    removeBoxContent();
-    gameControl.resetGame();
-    player1Score.textContent = 0;
-    ties.textContent = 0;
-    player2Score.textContent = 0;
-
-    introSection.classList.remove('hidden')
-    mainSection.classList.add('hidden');
-    
-    
-
-  })
-
-  btnNextRount.addEventListener('click' , (e) => {
-    modal.firstElementChild.firstElementChild.innerHTML = ""
-    modal.style.display= "none";
-    removeBoxContent();
-    gameControl.resetGame();
-    
-
-
-  })
-
-  restartEl.addEventListener('click',(e) => {
-    modal.firstElementChild.firstElementChild.innerHTML = ""
-    // document.querySelector('.modal-content__div').remove();
-    // modal.style.display= "none";
-    removeBoxContent();
-    gameControl.resetGame();
    
 
 
  
-  })
 
 
 
-  
 
-  
 
-  return {setWinnerBox, changeFinishGameUI}
+  return {setWinnerBox, changeFinishGameUI, updateScreen}
 }
