@@ -63,8 +63,8 @@ function GameController(playerOneName = 'player1', playerTwoName = 'player2') {
     players[0].tokenName = tokenName;
     players[1].tokenName = players[0].tokenName === "x" ? "o" : "x";
 
-    activePlayer = players[0];
-    document.querySelector('.img-x').setAttribute('src', `./assets/icon-${players[0].tokenName}.svg`)
+    activePlayer = players[0].tokenName === 'x' ? players[0] : players[1];
+
 
   }
 
@@ -158,9 +158,9 @@ function screenControler() {
   const btnNextRount = document.querySelector('.btn--next-round');
   const restartEl = document.querySelector('.main-restart');
 
-  const player1Score = document.querySelector('.player-1-score__result');
+  const playerXScore = document.querySelector('.player-x-score__result');
   const ties = document.querySelector('.ties__result');
-  const player2Score = document.querySelector('.player-2-score__result');
+  const playerOScore = document.querySelector('.player-o-score__result');
 
   const boxAll = document.querySelectorAll('.box');
 
@@ -207,6 +207,8 @@ function screenControler() {
   })
   
   startGameEl.addEventListener('click',(e) => {
+
+
     startGame();
   })
 
@@ -252,9 +254,9 @@ function screenControler() {
 
 
   const changeFinishGameUI = function(score = 'tied') {
-    if(score.name ==='player1') {
+    if(score.tokenName ==='x') {
       // set display result
-      player1Score.textContent = Number(player1Score.textContent) + 1;
+      playerXScore.textContent = Number(playerXScore.textContent) + 1;
       displayModalContent(score)
     }
     if(score === 'tied') {
@@ -262,9 +264,9 @@ function screenControler() {
       ties.textContent = Number(ties.textContent) + 1;
       displayModalContent();
     }
-    if(score.name === 'player2') {
+    if(score.tokenName === 'o') {
       // set display result
-      player2Score.textContent = Number(player2Score.textContent) + 1;
+      playerOScore.textContent = Number(playerOScore.textContent) + 1;
       displayModalContent(score);
     }
   }

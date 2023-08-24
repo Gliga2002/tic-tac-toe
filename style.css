@@ -286,9 +286,9 @@ main {
 
 }
 
-.player-1-score,
+.player-x-score,
 .ties,
-.player-2-score {
+.player-o-score {
   padding:1rem 3rem;
   color:var(--blackish);
   font-size:2rem;
@@ -299,7 +299,7 @@ main {
   text-transform: uppercase
 }
 
-.player-1-score {
+.player-x-score {
   background-color: var(--dark-cyan);
 }
 
@@ -307,13 +307,13 @@ main {
   background-color: var(--grayish);
 }
 
-.player-2-score {
+.player-o-score {
   background-color: var(--yellowish);
 }
 
-.player-1-score__result,
+.player-x-score__result,
 .ties__result,
-.player-2-score__result {
+.player-o-score__result {
   text-align: center;
   font-weight: bold;
   
