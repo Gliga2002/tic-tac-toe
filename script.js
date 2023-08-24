@@ -74,9 +74,9 @@ function GameController(playerOneName = 'player1', playerTwoName = 'player2') {
   // ovo cu da export
   const getActivePlayer = () =>  activePlayer;
   
-  const printNewRound = () => {
+  const printCurrRound = () => {
     board.getBoard();
-    console.log(`${getActivePlayer().name}'s turn.`);
+    console.log(`${getActivePlayer().name}'s just played.`);
   };
 
   function checkWinner(player, board) {
@@ -122,7 +122,7 @@ function GameController(playerOneName = 'player1', playerTwoName = 'player2') {
 
     updateScreen(clickedCell);
 
-    printNewRound();
+    printCurrRound();
     switchActivePlayer();
    
     minLenght--;
@@ -300,9 +300,9 @@ function screenControler() {
     mainSection.classList.add('hidden');
 }
   function resetResultDisplay() {
-    player1Score.textContent = 0;
+    playerXScore.textContent = 0;
     ties.textContent = 0;
-    player2Score.textContent = 0;
+    playerOScore.textContent = 0;
   }
 
   function playAgain() {
