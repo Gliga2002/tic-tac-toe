@@ -39,7 +39,7 @@ function Gameboard() {
 
 
 function GameController(playerOneName = 'player1', playerTwoName = 'player2') {
-  const {setWinnerBox, changeFinishGameUI, updateScreen} = screenControler();
+  const {setWinnerBoxes, changeFinishGameUI, updateScreen} = screenControler();
 
   const players = [
     {
@@ -84,7 +84,7 @@ function GameController(playerOneName = 'player1', playerTwoName = 'player2') {
     for(let row = 0; row < 3;row++) {
       if(board[row][0] === player.token &&  board[row][1]  === player.token &&  board[row][2] === player.token) {
 
-        setWinnerBox(row, null, null, player.tokenName);
+        setWinnerBoxes(row, null, null, player.tokenName);
         changeFinishGameUI(player);
         
       }
@@ -93,21 +93,21 @@ function GameController(playerOneName = 'player1', playerTwoName = 'player2') {
     for(let column = 0; column< 3;column++) {
       if(board[0][column] === player.token && board[1][column] === player.token && board[2][column] === player.token) {
 
-        setWinnerBox(null, column, null, player.tokenName);
+        setWinnerBoxes(null, column, null, player.tokenName);
         changeFinishGameUI(player);
       }
     }
     // Check diagonal right
     if(board[0][0] === player.token && board[1][1] === player.token && board[2][2] === player.token) {
 
-      setWinnerBox(null, null, 'right', player.tokenName);
+      setWinnerBoxes(null, null, 'right', player.tokenName);
       changeFinishGameUI(player);
     
     }
     // Check diagonal left
     if(board[0][2] === player.token && board[1][1] === player.token && board[2][0] === player.token) {
 
-      setWinnerBox(null, null, 'left', player.tokenName);
+      setWinnerBoxes(null, null, 'left', player.tokenName);
       changeFinishGameUI(player);
     }
 
@@ -138,17 +138,6 @@ function GameController(playerOneName = 'player1', playerTwoName = 'player2') {
 
   return {setPlayersTokenName, getActivePlayer, playRound, resetGame};
 }
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -189,7 +178,6 @@ function screenControler() {
   mainContent.addEventListener('mouseover', function(e) {
     const unclikedCell = e.target.closest('.unclicked')
     if(!unclikedCell) return
-    // unclikedCell.classList.add('hovered');
 
     const activePlayer = gameControl.getActivePlayer().tokenName;
 
@@ -201,18 +189,13 @@ function screenControler() {
     const hoveredCell = e.target.closest('.hovered')
     if(!hoveredCell) return
     removeClasses(hoveredCell,'hovered','x-hovered','o-hovered')
-    // hoveredCell.classList.remove('hovered','x-hovered','o-hovered');
   })
-
 
   selectXEl.addEventListener('click', function(e) {
     // Igrac 1 je izabrao x
     toggleSignSelect.call(this, selectOEl);
     
     gameControl.setPlayersTokenName('x');
-    
-  
-    
   })
   
   selectOEl.addEventListener('click', function(e)  {
@@ -233,20 +216,15 @@ function screenControler() {
     playAgain();
     resetResultDisplay();
     endGame();
-    
-    
-
   })
 
   btnNextRount.addEventListener('click' , (e) => {
     modal.style.display= "none";
     playAgain();
-
   })
 
   restartEl.addEventListener('click',(e) => {
     playAgain();
-
   })
 
 
@@ -254,23 +232,18 @@ function screenControler() {
     clickedCell.classList.remove('unclicked','x-hovered','o-hovered');
     const activePlayer = gameControl.getActivePlayer();
 
-  
     const showTurnImgEl = mainShowTurnEl.firstElementChild
     
     if(activePlayer.tokenName === 'x') {
       // ovo mi je sus
       setImgTurn(showTurnImgEl, './assets/icon-o-gray.svg');
-      // removeClasses(clickedCell, 'hovered','x-hovered')
+
       addClasses(clickedCell,'clicked', 'x-clicked');
-      // clickedCell.classList.remove('hovered','x-hovered');
-      // clickedCell.classList.add('clicked', 'x-clicked')
     }
     if(activePlayer.tokenName === 'o') {
       setImgTurn(showTurnImgEl, './assets/icon-x-gray.svg');
-      // removeClasses(clickedCell, 'hovered','o-hovered')
+
       addClasses(clickedCell,'clicked', 'o-clicked');
-      // clickedCell.classList.remove('hovered','o-hovered')
-      // clickedCell.classList.add('clicked', 'o-clicked')
     }
   
   }
@@ -283,17 +256,12 @@ function screenControler() {
       // set display result
       player1Score.textContent = Number(player1Score.textContent) + 1;
       displayModalContent(score)
-
     }
-
-
     if(score === 'tied') {
       // set display result
       ties.textContent = Number(ties.textContent) + 1;
       displayModalContent();
-      
     }
-
     if(score.name === 'player2') {
       // set display result
       player2Score.textContent = Number(player2Score.textContent) + 1;
@@ -302,85 +270,16 @@ function screenControler() {
   }
 
   // refacro code
-  const setWinnerBox = function (row, column, diagonal, tokenName) {
-    console.log({row, column, diagonal, tokenName})
-    console.log(typeof column)
-    if(tokenName === 'x') {
-      if(row >=0) {
-        switch(row) {
-          case 0: document.querySelectorAll('.box[data-row="0"]').forEach((box) => box.classList.add('x-winner'));
-            break;
-          case 1: document.querySelectorAll('.box[data-row="1"]').forEach((box) => box.classList.add('x-winner'));
-            break;
-          case 2: document.querySelectorAll('.box[data-row="2"]').forEach((box) => box.classList.add('x-winner'));
-    
-        }
-      }
-
-      if(column >=0) {
-        switch(column) {
-          case 0: 
-            console.log('ovde')
-            console.log(document.querySelectorAll('.box[data-column="0"]'))
-            document.querySelectorAll('.box[data-column="0"]').forEach((box) => box.classList.add('x-winner'));
-            break;
-          case 1: document.querySelectorAll('.box[data-column="1"]').forEach((box) => box.classList.add('x-winner'));
-            break;
-          case 2: document.querySelectorAll('.box[data-column="2"]').forEach((box) => box.classList.add('x-winner'));
-    
-        }
-      }
-
-
-      if(diagonal === 'right') {
-        document.querySelectorAll('.box[data-column="0"][data-row="0"]').forEach((box) => box.classList.add('x-winner'));
-        document.querySelectorAll('.box[data-column="1"][data-row="1"]').forEach((box) => box.classList.add('x-winner'));
-        document.querySelectorAll('.box[data-column="2"][data-row="2"]').forEach((box) => box.classList.add('x-winner'));
-      }
-
-      if(diagonal === 'left') {
-        document.querySelectorAll('.box[data-column="2"][data-row="0"]').forEach((box) => box.classList.add('x-winner'));
-        document.querySelectorAll('.box[data-column="1"][data-row="1"]').forEach((box) => box.classList.add('x-winner'));
-        document.querySelectorAll('.box[data-column="0"][data-row="2"]').forEach((box) => box.classList.add('x-winner'));
-      }
-     
-    } else if (tokenName === 'o') {
-      if(row >= 0) {
-        switch(row) {
-          case 0: document.querySelectorAll('.box[data-row="0"]').forEach((box) => box.classList.add('o-winner'));
-            break;
-          case 1: document.querySelectorAll('.box[data-row="1"]').forEach((box) => box.classList.add('o-winner'));
-            break;
-          case 2: document.querySelectorAll('.box[data-row="2"]').forEach((box) => box.classList.add('o-winner'));
-    
-        }
-      }
-
-      if(column >=0) {
-        switch(column) {
-          case 0: document.querySelectorAll('.box[data-column="0"]').forEach((box) => box.classList.add('o-winner'));
-            break;
-          case 1: document.querySelectorAll('.box[data-column="1"]').forEach((box) => box.classList.add('o-winner'));
-            break;
-          case 2: document.querySelectorAll('.box[data-column="2"]').forEach((box) => box.classList.add('o-winner'));
-    
-        }
-      }
-
-
-      if(diagonal === 'right') {
-        document.querySelectorAll('.box[data-column="0"][data-row="0"]').forEach((box) => box.classList.add('o-winner'));
-        document.querySelectorAll('.box[data-column="1"][data-row="1"]').forEach((box) => box.classList.add('o-winner'));
-        document.querySelectorAll('.box[data-column="2"][data-row="2"]').forEach((box) => box.classList.add('o-winner'));
-      }
-
-      if(diagonal === 'left') {
-        document.querySelectorAll('.box[data-column="2"][data-row="0"]').forEach((box) => box.classList.add('o-winner'));
-        document.querySelectorAll('.box[data-column="1"][data-row="1"]').forEach((box) => box.classList.add('o-winner'));
-        document.querySelectorAll('.box[data-column="0"][data-row="2"]').forEach((box) => box.classList.add('o-winner'));
-      }
+  const setWinnerBoxes = function (row, column, diagonal, tokenName) {
+    const winnerBoxesData = {
+      row: row,
+      column: column,
+      diagonal: diagonal,
+      tokenName: tokenName
     }
 
+    checkTokenName(winnerBoxesData, 'x');
+    checkTokenName(winnerBoxesData, 'o');
   }
 
   
@@ -416,12 +315,10 @@ function screenControler() {
   }
 
   function removeClasses(el, ...args) {
-    console.log('PROBA REMOVE')
     args.forEach((arg) => el.classList.remove(arg))
   }
 
   function addClasses(el, ...args) {
-    console.log('PROBA ADD')
     args.forEach((arg) => el.classList.add(arg))
   }
 
@@ -429,14 +326,9 @@ function screenControler() {
     boxAll.forEach((box) => {
       removeClasses(box, 'clicked','x-winner','o-winner','x-clicked', 'o-clicked');
       addClasses(box, 'unclicked');
-      // box.classList.remove('clicked','x-winner','o-winner','x-clicked', 'o-clicked');
-      // box.classList.add('unclicked');
     })
   }
 
-
-
-  
   // winnerPlayer je objekat
   function displayModalContent(winnerPlayer) {
     modal.style.display = 'block';
@@ -455,17 +347,48 @@ function screenControler() {
 
   }
 
-  
+  function checkTokenName(boardInfo, xOro) {
+    console.log('OVDE');
+    if(boardInfo.tokenName === xOro) {
+      if(boardInfo.row >=0) {
+        switch(boardInfo.row) {
+          case 0: document.querySelectorAll('.box[data-row="0"]').forEach((box) => box.classList.add(`${xOro}-winner`));
+            break;
+          case 1: document.querySelectorAll('.box[data-row="1"]').forEach((box) => box.classList.add(`${xOro}-winner`));
+            break;
+          case 2: document.querySelectorAll('.box[data-row="2"]').forEach((box) => box.classList.add(`${xOro}-winner`));
+    
+        }
+      }
+
+      if(boardInfo.column >=0) {
+        switch(boardInfo.column) {
+          case 0: 
+            document.querySelectorAll('.box[data-column="0"]').forEach((box) => box.classList.add(`${xOro}-winner`));
+            break;
+          case 1: document.querySelectorAll('.box[data-column="1"]').forEach((box) => box.classList.add(`${xOro}-winner`));
+            break;
+          case 2: document.querySelectorAll('.box[data-column="2"]').forEach((box) => box.classList.add(`${xOro}-winner`));
+    
+        }
+      }
 
 
-   
+      if(boardInfo.diagonal === 'right') {
+        document.querySelectorAll('.box[data-column="0"][data-row="0"]').forEach((box) => box.classList.add(`${xOro}-winner`));
+        document.querySelectorAll('.box[data-column="1"][data-row="1"]').forEach((box) => box.classList.add(`${xOro}-winner`));
+        document.querySelectorAll('.box[data-column="2"][data-row="2"]').forEach((box) => box.classList.add(`${xOro}-winner`));
+      }
+
+      if(boardInfo.diagonal === 'left') {
+        document.querySelectorAll('.box[data-column="2"][data-row="0"]').forEach((box) => box.classList.add(`${xOro}-winner`));
+        document.querySelectorAll('.box[data-column="1"][data-row="1"]').forEach((box) => box.classList.add(`${xOro}-winner`));
+        document.querySelectorAll('.box[data-column="0"][data-row="2"]').forEach((box) => box.classList.add(`${xOro}-winner`));
+      }
+
+    }
+  }
 
 
- 
-
-
-
-
-
-  return {setWinnerBox, changeFinishGameUI, updateScreen}
+  return {setWinnerBoxes, changeFinishGameUI, updateScreen}
 }
